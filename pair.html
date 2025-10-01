@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anyway Tech - Premium Pair Code Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00f5d4;
+      --primary-dark: #00b39b;
+      --secondary: #12121d;
+      --background: #0a0a12;
+      --card-bg: rgba(25, 25, 36, 0.95);
+      --text: #f8f8ff;
+      --text-muted: #b8b8d1;
+      --input-bg: rgba(255, 255, 255, 0.15);
+      --input-text: #ffffff;
+      --success: #6ee7b7;
+      --error: #fca5a5;
+      --warning: #fcd34d;
+      --border-color: rgba(0, 245, 212, 0.4);
+      --glass-blur: 16px;
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --primary: #00b39b;
+      --primary-dark: #00897b;
+      --secondary: #f9fafb;
+      --background: #f3f4f6;
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --input-bg: rgba(0, 0, 0, 0.08);
+      --input-text: #1f2937;
+      --border-color: rgba(0, 179, 155, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 245, 212, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(0, 179, 155, 0.15) 0%, transparent 45%),
+        linear-gradient(to bottom right, #0a0a12, #12121d);
+      background-attachment: fixed;
+      transition: var(--transition);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+    }
+
+    .logo-container {
+      position: relative;
+      margin-bottom: 2rem;
+      z-index: 1;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 30px rgba(0, 245, 212, 0.4), 
+                  0 0 60px rgba(0, 245, 212, 0.2);
+      transition: var(--transition);
+      filter: drop-shadow(0 5px 15px rgba(0, 245, 212, 0.3));
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 245, 212, 0.3) 0%, transparent 70%);
+      z-index: -1;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .card {
+      width: 100%;
+      padding: 2.5rem;
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 245, 212, 0.05) 0%, transparent 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    h1 {
+      margin-bottom: 1.2rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: -0.5px;
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 0 2px 10px rgba(0, 245, 212, 0.2);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 1.8rem 0;
+    }
+
+    .country-select {
+      width: 100%;
+      padding: 1.1rem 1.4rem;
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--input-text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      appearance: none;
+      transition: var(--transition);
+      outline: none;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .country-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.3);
+    }
+
+    .select-arrow {
+      position: absolute;
+      top: 50%;
+      right: 1.4rem;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .country-select:focus + .select-arrow {
+      color: var(--primary);
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 1.1rem 1.4rem;
+      background: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--input-text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.3);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--secondary);
+      border: none;
+      border-radius: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 6px 20px rgba(0, 245, 212, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 245, 212, 0.5);
+      letter-spacing: 1px;
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+      z-index: -1;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .result-container {
+      margin-top: 1.8rem;
+      padding: 1.5rem;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      transition: var(--transition);
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+      transform: scale(0.95);
+      line-height: 1.6;
+    }
+
+    .result-container.show {
+      opacity: 1;
+      height: auto;
+      transform: scale(1);
+      background: rgba(0, 245, 212, 0.12);
+      border: 1px solid rgba(0, 245, 212, 0.3);
+    }
+
+    .result-container.success {
+      color: var(--success);
+    }
+
+    .result-container.error {
+      color: var(--error);
+    }
+
+    .result-container.warning {
+      color: var(--warning);
+    }
+
+    .code-display {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin: 1rem 0;
+      color: var(--primary);
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 0 2px 8px rgba(0, 245, 212, 0.3);
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 0.5rem 1rem;
+      display: inline-block;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+
+    .action-btn {
+      padding: 0.9rem 1.8rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: var(--secondary);
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 245, 212, 0.3);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+      transform: scale(0.98);
+    }
+
+    .whatsapp-btn {
+      background: #25D366;
+      color: white;
+    }
+
+    .whatsapp-btn:hover {
+      background: #128C7E;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg) scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 245, 212, 0.4);
+    }
+
+    .theme-toggle i {
+      font-size: 1.3rem;
+      color: var(--primary);
+      transition: var(--transition);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes pulse-glow {
+      0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+      100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .container > * {
+      animation: fadeIn 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    }
+
+    .container > *:nth-child(1) { animation-delay: 0.1s; }
+    .container > *:nth-child(2) { animation-delay: 0.2s; }
+    .container > *:nth-child(3) { animation-delay: 0.3s; }
+    .input-group { animation-delay: 0.4s !important; }
+    .submit-btn { animation-delay: 0.5s !important; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .card {
+        padding: 1.8rem;
+        border-radius: 20px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .theme-toggle {
+        width: 45px;
+        height: 45px;
+        top: 15px;
+        right: 15px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="container">
+    <div class="logo-container">
+      <img src="https://files.catbox.moe/s1ggtt.jpeg" alt="Caseyrhodes Tech" class="logo">
+      <div class="logo-glow"></div>
+    </div>
+    
+    <div class="card">
+      <h1>Caseyrhodes Tech Pair Code</h1>
+      <p class="subtitle">Select your country and enter your WhatsApp number to generate your secure pairing code</p>
+      
+      <div class="input-group">
+        <select id="country-code" class="country-select">
+          <option value="">Select Country</option>
+          <option value="93">Afghanistan (+93)</option>
+          <option value="355">Albania (+355)</option>
+          <option value="213">Algeria (+213)</option>
+          <option value="1684">American Samoa (+1684)</option>
+          <option value="376">Andorra (+376)</option>
+          <option value="244">Angola (+244)</option>
+          <option value="1264">Anguilla (+1264)</option>
+          <option value="672">Antarctica (+672)</option>
+          <option value="1268">Antigua and Barbuda (+1268)</option>
+          <option value="54">Argentina (+54)</option>
+          <option value="374">Armenia (+374)</option>
+          <option value="297">Aruba (+297)</option>
+          <option value="61">Australia (+61)</option>
+          <option value="43">Austria (+43)</option>
+          <option value="994">Azerbaijan (+994)</option>
+          <option value="1242">Bahamas (+1242)</option>
+          <option value="973">Bahrain (+973)</option>
+          <option value="880">Bangladesh (+880)</option>
+          <option value="1246">Barbados (+1246)</option>
+          <option value="375">Belarus (+375)</option>
+          <option value="32">Belgium (+32)</option>
+          <option value="501">Belize (+501)</option>
+          <option value="229">Benin (+229)</option>
+          <option value="1441">Bermuda (+1441)</option>
+          <option value="975">Bhutan (+975)</option>
+          <option value="591">Bolivia (+591)</option>
+          <option value="387">Bosnia and Herzegovina (+387)</option>
+          <option value="267">Botswana (+267)</option>
+          <option value="55">Brazil (+55)</option>
+          <option value="246">British Indian Ocean Territory (+246)</option>
+          <option value="673">Brunei Darussalam (+673)</option>
+          <option value="359">Bulgaria (+359)</option>
+          <option value="226">Burkina Faso (+226)</option>
+          <option value="257">Burundi (+257)</option>
+          <option value="855">Cambodia (+855)</option>
+          <option value="237">Cameroon (+237)</option>
+          <option value="1">Canada (+1)</option>
+          <option value="238">Cape Verde (+238)</option>
+          <option value="1345">Cayman Islands (+1345)</option>
+          <option value="236">Central African Republic (+236)</option>
+          <option value="235">Chad (+235)</option>
+          <option value="56">Chile (+56)</option>
+          <option value="86">China (+86)</option>
+          <option value="61">Christmas Island (+61)</option>
+          <option value="672">Cocos (Keeling) Islands (+672)</option>
+          <option value="57">Colombia (+57)</option>
+          <option value="269">Comoros (+269)</option>
+          <option value="242">Congo (+242)</option>
+          <option value="243">Congo, Democratic Republic of the (+243)</option>
+          <option value="682">Cook Islands (+682)</option>
+          <option value="506">Costa Rica (+506)</option>
+          <option value="225">Côte d'Ivoire (+225)</option>
+          <option value="385">Croatia (+385)</option>
+          <option value="53">Cuba (+53)</option>
+          <option value="357">Cyprus (+357)</option>
+          <option value="420">Czech Republic (+420)</option>
+          <option value="45">Denmark (+45)</option>
+          <option value="253">Djibouti (+253)</option>
+          <option value="1767">Dominica (+1767)</option>
+          <option value="1809">Dominican Republic (+1809)</option>
+          <option value="593">Ecuador (+593)</option>
+          <option value="20">Egypt (+20)</option>
+          <option value="503">El Salvador (+503)</option>
+          <option value="240">Equatorial Guinea (+240)</option>
+          <option value="291">Eritrea (+291)</option>
+          <option value="372">Estonia (+372)</option>
+          <option value="251">Ethiopia (+251)</option>
+          <option value="500">Falkland Islands (Malvinas) (+500)</option>
+          <option value="298">Faroe Islands (+298)</option>
+          <option value="679">Fiji (+679)</option>
+          <option value="358">Finland (+358)</option>
+          <option value="33">France (+33)</option>
+          <option value="594">French Guiana (+594)</option>
+          <option value="689">French Polynesia (+689)</option>
+          <option value="241">Gabon (+241)</option>
+          <option value="220">Gambia (+220)</option>
+          <option value="995">Georgia (+995)</option>
+          <option value="49">Germany (+49)</option>
+          <option value="233">Ghana (+233)</option>
+          <option value="350">Gibraltar (+350)</option>
+          <option value="30">Greece (+30)</option>
+          <option value="299">Greenland (+299)</option>
+          <option value="1473">Grenada (+1473)</option>
+          <option value="590">Guadeloupe (+590)</option>
+          <option value="1671">Guam (+1671)</option>
+          <option value="502">Guatemala (+502)</option>
+          <option value="44">Guernsey (+44)</option>
+          <option value="224">Guinea (+224)</option>
+          <option value="245">Guinea-Bissau (+245)</option>
+          <option value="592">Guyana (+592)</option>
+          <option value="509">Haiti (+509)</option>
+          <option value="379">Holy See (Vatican City State) (+379)</option>
+          <option value="504">Honduras (+504)</option>
+          <option value="852">Hong Kong (+852)</option>
+          <option value="36">Hungary (+36)</option>
+          <option value="354">Iceland (+354)</option>
+          <option value="91">India (+91)</option>
+          <option value="62">Indonesia (+62)</option>
+          <option value="98">Iran, Islamic Republic of (+98)</option>
+          <option value="964">Iraq (+964)</option>
+          <option value="353">Ireland (+353)</option>
+          <option value="44">Isle of Man (+44)</option>
+          <option value="972">Israel (+972)</option>
+          <option value="39">Italy (+39)</option>
+          <option value="1876">Jamaica (+1876)</option>
+          <option value="81">Japan (+81)</option>
+          <option value="44">Jersey (+44)</option>
+          <option value="962">Jordan (+962)</option>
+          <option value="7">Kazakhstan (+7)</option>
+          <option value="254">Kenya (+254)</option>
+          <option value="686">Kiribati (+686)</option>
+          <option value="850">Korea, Democratic People's Republic of (+850)</option>
+          <option value="82">Korea, Republic of (+82)</option>
+          <option value="965">Kuwait (+965)</option>
+          <option value="996">Kyrgyzstan (+996)</option>
+          <option value="856">Lao People's Democratic Republic (+856)</option>
+          <option value="371">Latvia (+371)</option>
+          <option value="961">Lebanon (+961)</option>
+          <option value="266">Lesotho (+266)</option>
+          <option value="231">Liberia (+231)</option>
+          <option value="218">Libya (+218)</option>
+          <option value="423">Liechtenstein (+423)</option>
+          <option value="370">Lithuania (+370)</option>
+          <option value="352">Luxembourg (+352)</option>
+          <option value="853">Macao (+853)</option>
+          <option value="389">Macedonia, the former Yugoslav Republic of (+389)</option>
+          <option value="261">Madagascar (+261)</option>
+          <option value="265">Malawi (+265)</option>
+          <option value="60">Malaysia (+60)</option>
+          <option value="960">Maldives (+960)</option>
+          <option value="223">Mali (+223)</option>
+          <option value="356">Malta (+356)</option>
+          <option value="692">Marshall Islands (+692)</option>
+          <option value="596">Martinique (+596)</option>
+          <option value="222">Mauritania (+222)</option>
+          <option value="230">Mauritius (+230)</option>
+          <option value="262">Mayotte (+262)</option>
+          <option value="52">Mexico (+52)</option>
+          <option value="691">Micronesia, Federated States of (+691)</option>
+          <option value="373">Moldova, Republic of (+373)</option>
+          <option value="377">Monaco (+377)</option>
+          <option value="976">Mongolia (+976)</option>
+          <option value="382">Montenegro (+382)</option>
+          <option value="1664">Montserrat (+1664)</option>
+          <option value="212">Morocco (+212)</option>
+          <option value="258">Mozambique (+258)</option>
+          <option value="95">Myanmar (+95)</option>
+          <option value="264">Namibia (+264)</option>
+          <option value="674">Nauru (+674)</option>
+          <option value="977">Nepal (+977)</option>
+          <option value="31">Netherlands (+31)</option>
+          <option value="687">New Caledonia (+687)</option>
+          <option value="64">New Zealand (+64)</option>
+          <option value="505">Nicaragua (+505)</option>
+          <option value="227">Niger (+227)</option>
+          <option value="234">Nigeria (+234)</option>
+          <option value="683">Niue (+683)</option>
+          <option value="672">Norfolk Island (+672)</option>
+          <option value="1670">Northern Mariana Islands (+1670)</option>
+          <option value="47">Norway (+47)</option>
+          <option value="968">Oman (+968)</option>
+          <option value="92">Pakistan (+92)</option>
+          <option value="680">Palau (+680)</option>
+          <option value="970">Palestinian Territory, Occupied (+970)</option>
+          <option value="507">Panama (+507)</option>
+          <option value="675">Papua New Guinea (+675)</option>
+          <option value="595">Paraguay (+595)</option>
+          <option value="51">Peru (+51)</option>
+          <option value="63">Philippines (+63)</option>
+          <option value="64">Pitcairn (+64)</option>
+          <option value="48">Poland (+48)</option>
+          <option value="351">Portugal (+351)</option>
+          <option value="1787">Puerto Rico (+1787)</option>
+          <option value="974">Qatar (+974)</option>
+          <option value="262">Réunion (+262)</option>
+          <option value="40">Romania (+40)</option>
+          <option value="7">Russian Federation (+7)</option>
+          <option value="250">Rwanda (+250)</option>
+          <option value="590">Saint Barthélemy (+590)</option>
+          <option value="290">Saint Helena, Ascension and Tristan da Cunha (+290)</option>
+          <option value="1869">Saint Kitts and Nevis (+1869)</option>
+          <option value="1758">Saint Lucia (+1758)</option>
+          <option value="590">Saint Martin (French part) (+590)</option>
+          <option value="508">Saint Pierre and Miquelon (+508)</option>
+          <option value="1784">Saint Vincent and the Grenadines (+1784)</option>
+          <option value="685">Samoa (+685)</option>
+          <option value="378">San Marino (+378)</option>
+          <option value="239">Sao Tome and Principe (+239)</option>
+          <option value="966">Saudi Arabia (+966)</option>
+          <option value="221">Senegal (+221)</option>
+          <option value="381">Serbia (+381)</option>
+          <option value="248">Seychelles (+248)</option>
+          <option value="232">Sierra Leone (+232)</option>
+          <option value="65">Singapore (+65)</option>
+          <option value="1721">Sint Maarten (Dutch part) (+1721)</option>
+          <option value="421">Slovakia (+421)</option>
+          <option value="386">Slovenia (+386)</option>
+          <option value="677">Solomon Islands (+677)</option>
+          <option value="252">Somalia (+252)</option>
+          <option value="27">South Africa (+27)</option>
+          <option value="500">South Georgia and the South Sandwich Islands (+500)</option>
+          <option value="211">South Sudan (+211)</option>
+          <option value="34">Spain (+34)</option>
+          <option value="94">Sri Lanka (+94)</option>
+          <option value="249">Sudan (+249)</option>
+          <option value="597">Suriname (+597)</option>
+          <option value="47">Svalbard and Jan Mayen (+47)</option>
+          <option value="46">Sweden (+46)</option>
+          <option value="41">Switzerland (+41)</option>
+          <option value="963">Syrian Arab Republic (+963)</option>
+          <option value="886">Taiwan, Province of China (+886)</option>
+          <option value="992">Tajikistan (+992)</option>
+          <option value="255">Tanzania, United Republic of (+255)</option>
+          <option value="66">Thailand (+66)</option>
+          <option value="670">Timor-Leste (+670)</option>
+          <option value="228">Togo (+228)</option>
+          <option value="690">Tokelau (+690)</option>
+          <option value="676">Tonga (+676)</option>
+          <option value="1868">Trinidad and Tobago (+1868)</option>
+          <option value="216">Tunisia (+216)</option>
+          <option value="90">Turkey (+90)</option>
+          <option value="993">Turkmenistan (+993)</option>
+          <option value="1649">Turks and Caicos Islands (+1649)</option>
+          <option value="688">Tuvalu (+688)</option>
+          <option value="256">Uganda (+256)</option>
+          <option value="380">Ukraine (+380)</option>
+          <option value="971">United Arab Emirates (+971)</option>
+          <option value="44">United Kingdom (+44)</option>
+          <option value="1">United States (+1)</option>
+          <option value="598">Uruguay (+598)</option>
+          <option value="998">Uzbekistan (+998)</option>
+          <option value="678">Vanuatu (+678)</option>
+          <option value="58">Venezuela, Bolivarian Republic of (+58)</option>
+          <option value="84">Viet Nam (+84)</option>
+          <option value="1284">Virgin Islands, British (+1284)</option>
+          <option value="1340">Virgin Islands, U.S. (+1340)</option>
+          <option value="681">Wallis and Futuna (+681)</option>
+          <option value="967">Yemen (+967)</option>
+          <option value="260">Zambia (+260)</option>
+          <option value="263">Zimbabwe (+263)</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+      
+      <div class="input-group">
+        <input id="phone-number" type="text" class="input-field" placeholder="Phone number (without country code)">
+      </div>
+      
+      <button id="submit" class="submit-btn">
+        <span id="btn-text">Generate Pair Code</span>
+        <span id="loading-spinner" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+      </button>
+      
+      <div id="pair" class="result-container"></div>
+      
+      <div class="action-buttons" id="action-buttons" style="display: none;">
+        <button id="copy-code" class="action-btn copy-btn">
+          <i class="far fa-copy"></i> Copy Code
+        </button>
+        <button id="whatsapp-btn" class="action-btn whatsapp-btn">
+          <i class="fab fa-whatsapp"></i> Open WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="theme-toggle">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+      const isLightMode = body.getAttribute('data-theme') === 'dark';
+      body.setAttribute('data-theme', isLightMode ? 'light' : 'dark');
+      themeToggle.innerHTML = isLightMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+    });
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      body.setAttribute('data-theme', savedTheme);
+      themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    }
+
+    const submitButton = document.getElementById('submit');
+    const phoneNumberInput = document.getElementById('phone-number');
+    const countryCodeSelect = document.getElementById('country-code');
+    const pairDiv = document.getElementById('pair');
+    const copyCodeButton = document.getElementById('copy-code');
+    const whatsappButton = document.getElementById('whatsapp-btn');
+    const actionButtons = document.getElementById('action-buttons');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const btnText = document.getElementById('btn-text');
+
+    submitButton.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const countryCode = countryCodeSelect.value;
+      const phoneNumber = phoneNumberInput.value.replace(/[^0-9]/g, '');
+
+      if (!countryCode) {
+        showResult('Please select your country code', 'warning');
+        countryCodeSelect.focus();
+        return;
+      }
+      
+      if (!phoneNumber) {
+        showResult('Please enter your phone number', 'warning');
+        phoneNumberInput.focus();
+        return;
+      }
+
+      if (phoneNumber.length < 8) {
+        showResult('Phone number is too short', 'warning');
+        return;
+      }
+
+      // Show loading state
+      submitButton.disabled = true;
+      btnText.innerHTML = '<span class="loader"></span> Generating';
+      pairDiv.classList.remove('show');
+      actionButtons.style.display = 'none';
+
+      try {
+        const fullNumber = countryCode + phoneNumber;
+        const response = await axios.get(`/code?number=${encodeURIComponent(fullNumber)}`);
+        
+        if (response.data && response.data.code) {
+          const code = response.data.code;
+          showResult(`
+            <p>Your Caseyrhodes Tech pairing code is:</p>
+            <div class="code-display">${code}</div>
+            <p>This code will expire in 5 minutes</p>
+          `, 'success');
+          
+          // Show action buttons
+          actionButtons.style.display = 'flex';
+          copyCodeButton.dataset.code = code;
+          whatsappButton.dataset.number = fullNumber;
+        } else {
+          showResult('Service unavailable. Please try again later.', 'error');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        const errorMsg = error.response?.data?.message || 
+                        'An error occurred. Please try again later.';
+        showResult(errorMsg, 'error');
+      } finally {
+        submitButton.disabled = false;
+        btnText.textContent = 'Generate Pair Code';
+      }
+    });
+
+    copyCodeButton.addEventListener('click', () => {
+      const code = copyCodeButton.dataset.code;
+      navigator.clipboard.writeText(code).then(() => {
+        copyCodeButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        copyCodeButton.classList.add('copied');
+        
+        // Show confirmation in result container
+        const originalContent = pairDiv.innerHTML;
+        pairDiv.innerHTML = `
+          <p>Code copied to clipboard!</p>
+          <div class="code-display">${code}</div>
+        `;
+        
+        setTimeout(() => {
+          copyCodeButton.innerHTML = '<i class="far fa-copy"></i> Copy Code';
+          copyCodeButton.classList.remove('copied');
+          pairDiv.innerHTML = originalContent;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        showResult('Failed to copy code. Please try manually.', 'error');
+      });
+    });
+
+    whatsappButton.addEventListener('click', () => {
+      const number = whatsappButton.dataset.number;
+      if (number) {
+        window.open(`https://wa.me/${number}`, '_blank');
+      }
+    });
+
+    function showResult(message, type) {
+      pairDiv.innerHTML = message;
+      pairDiv.className = 'result-container show';
+      pairDiv.classList.add(type);
+      
+      // Auto-scroll to result
+      pairDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Add pulse animation to logo on page load
+    document.querySelector('.logo').style.animation = 'pulse 2s ease-in-out 2';
+  </script>
+</body>
+</html>
+ 
