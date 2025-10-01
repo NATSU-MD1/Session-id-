@@ -7,7 +7,7 @@ const pino = require("pino");
 const { Storage, File } = require("megajs");
 
 const {
-    default: Gifted_Tech,
+    default: Natsu_Tech,
     useMultiFileAuthState,
     delay,
     makeCacheableSignalKeyStore,
@@ -27,8 +27,8 @@ function randomMegaId(length = 6, numberLength = 4) {
 async function uploadCredsToMega(credsPath) {
     try {
         const storage = await new Storage({
-            email: 'palvinkibet46@gmail.com',
-            password: 'caseytech@2030'
+            email: '',
+            password: ''
         }).ready;
         console.log('Mega storage initialized.');
         if (!fs.existsSync(credsPath)) {
